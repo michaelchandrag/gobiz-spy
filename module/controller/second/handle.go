@@ -44,21 +44,21 @@ func RequestTransactionsGobiz (c *gin.Context) {
 		for i, _ := range res.ResponseHits {
 			go func(idx int) {
 				ord, _ := gobiz.RequestOrder(payload.AccessToken, res.ResponseHits[idx].ResponseTransaction.OrderID)
-				temp := gobiz.GobizCustomer{
-					CustomerID: ord.ResponseData.ResponseOrder[0].ProductSpecific.GoResto.CustomerID,
-					CustomerName: ord.ResponseData.ResponseOrder[0].ProductSpecific.GoResto.CustomerName,
-					CustomerPhone: ord.ResponseData.ResponseOrder[0].ProductSpecific.GoResto.CustomerPhone,
-					CustomerEmail: ord.ResponseData.ResponseOrder[0].ProductSpecific.GoResto.CustomerEmail,
-				}
+				if len(ord.ResponseData.ResponseOrder) > 0 {
+					temp := gobiz.GobizCustomer{
+						CustomerID: ord.ResponseData.ResponseOrder[0].ProductSpecific.GoResto.CustomerID,
+						CustomerName: ord.ResponseData.ResponseOrder[0].ProductSpecific.GoResto.CustomerName,
+						CustomerPhone: ord.ResponseData.ResponseOrder[0].ProductSpecific.GoResto.CustomerPhone,
+						CustomerEmail: ord.ResponseData.ResponseOrder[0].ProductSpecific.GoResto.CustomerEmail,
+					}
 
-				new := gobiz.GobizTransaction{
-					OrderID: res.ResponseHits[idx].ResponseTransaction.OrderID,
-					Customer:  temp,
-					OrderedAt: ord.ResponseData.ResponseOrder[0].OrderedAt,
+					new := gobiz.GobizTransaction{
+						OrderID: res.ResponseHits[idx].ResponseTransaction.OrderID,
+						Customer:  temp,
+						OrderedAt: ord.ResponseData.ResponseOrder[0].OrderedAt,
+					}
+					customData = append(customData, new)
 				}
-				// res.ResponseHits[idx].ResponseTransaction.Customer = temp
-				// res.ResponseHits[idx].ResponseTransaction.OrderedAt = ord.ResponseData.ResponseOrder[0].OrderedAt
-				customData = append(customData, new)
 				defer wg.Done()
 			}(i)
 			ctr+=1

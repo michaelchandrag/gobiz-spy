@@ -302,9 +302,10 @@ func RequestTransactions (accessToken string, merchantId string, startDate strin
 		fmt.Println(err)
 		return result, err
 	}
-	
+
 	defer res.Body.Close()
 	json.NewDecoder(res.Body).Decode(&result)
+	fmt.Println(result.Total)
 	return result, nil
 }
 
