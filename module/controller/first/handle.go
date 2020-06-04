@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	gobiz "github.com/michaelchandrag/gobiz-spy/module/util/gobiz"
+	geocoding "github.com/michaelchandrag/gobiz-spy/module/util/geocoding"
 	"github.com/gin-gonic/gin"
 )
 
@@ -115,6 +116,28 @@ func RequestProfileGobiz (c *gin.Context) {
 		"success": true,
 		"message": "Success request profile merchant.",
 		"response_data": res,
+	})
+	return
+}
+
+func Geocoding (c *gin.Context) {
+	type Body struct {
+		Latitude 	string 		`json:"latitude"`
+		Longitude 	string 		`json:"longitude"`
+	}
+
+	var payload Body
+	if err := c.BindJSON(&payload); err != nil {
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "Body request is not correct.",
+		})
+	}
+
+	geo, _ := geocoding.ConvertLatLngToAddress(payload.Latitude, payload.Longitude)
+	c.JSON(200, gin.H{
+		"success": true,
+		"geocoding": geo,
 	})
 	return
 }

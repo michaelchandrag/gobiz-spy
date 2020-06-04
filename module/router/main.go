@@ -18,6 +18,7 @@ func SetupRouter() *gin.Engine {
 
 	r.GET("/", first.RenderFirstPage)
 	r.GET("/page2", second.RenderSecondPage)
+	r.POST("/geocoding", first.Geocoding)
 	r.POST("/request_otp_gobiz", first.RequestOtpGobiz)
 	r.POST("/request_token_gobiz", first.RequestTokenGobiz)
 	r.POST("/request_profile_gobiz", first.RequestProfileGobiz)

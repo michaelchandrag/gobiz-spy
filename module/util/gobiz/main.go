@@ -31,6 +31,7 @@ type (
 		OrderID 		string 				`json:"order_id"`
 		Customer 		GobizCustomer 		`json:"customer"`
 		OrderedAt 		string 				`json:"ordered_at"`
+		Routes 			[]Routes 			`json:"routes"`
 	}
 
 	GobizHits struct {
@@ -58,6 +59,19 @@ type (
 		CustomerName 	string 			`json:"customer_name"`
 		CustomerPhone 	string 			`json:"customer_phone"`
 		CustomerEmail  	string 			`json:"customer_email"`
+		Routes 			[]Routes 		`json:"routes"`
+		ShoppingPrice 	int 			`json:"shopping_price"`
+	}
+
+	Routes struct {
+		DistanceInKms 	float64 		`json:"distance_in_kms"`
+		RoutesEnd 		RoutesEnd 		`json:"end"`
+		RouteOrder 		int 			`json:"route_order"`
+	}
+
+	RoutesEnd struct {
+		Latitude 		float64 			`json:"latitude"`
+		Longitude 		float64 			`json:"longitude"`
 	}
 
 	GobizErrors struct {

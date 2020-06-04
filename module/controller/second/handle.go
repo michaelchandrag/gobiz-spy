@@ -56,6 +56,7 @@ func RequestTransactionsGobiz (c *gin.Context) {
 						OrderID: res.ResponseHits[idx].ResponseTransaction.OrderID,
 						Customer:  temp,
 						OrderedAt: ord.ResponseData.ResponseOrder[0].OrderedAt,
+						Routes: ord.ResponseData.ResponseOrder[0].ProductSpecific.GoResto.Routes,
 					}
 					customData = append(customData, new)
 				}

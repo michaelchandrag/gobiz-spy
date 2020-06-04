@@ -52,7 +52,7 @@
                   Akses data hanya bisa dilakukan sekitar 1-2 jam. Apabila sudah melewati itu lakukan kembali request OTP melalui halaman utama.
                 </p>
                 <div class="form-group">
-                  Start Date :<input type="text" class="form-control" id="start_date" value="01/01/2020"> <br/>
+                  Start Date :<input type="text" class="form-control" id="start_date" value="06/02/2020"> <br/>
                   End Date: <input type="text" class="form-control" id="end_date">
                   <br/>
                   <div class="buttons">
@@ -78,8 +78,12 @@
                               <th>Order ID</th>
                               <th>Customer ID</th>
                               <th>Customer Name</th>
-                              <th>Customer Email</th>
                               <th>Customer Phone</th>
+                              <th>Customer Email</th>
+                              <th>Formatted Address</th>
+                              <th>Kelurahan</th>
+                              <th>Kecamatan</th>
+                              <th>Kode Pos</th>
                           </tr>
                       </thead>
                       <tbody class="my-table-body">
@@ -209,14 +213,49 @@
             var gabung = ''
             var data = response.response_data
             for (var key in data) {
-              gabung += '<tr>'
-              gabung += '<td>' + parseISOString(data[key].ordered_at) + '</td>'
-              gabung += '<td>' + data[key].order_id + '</td>'
-              gabung += '<td>' + data[key].customer.customer_id + '</td>'
-              gabung += '<td>' + data[key].customer.customer_name + '</td>'
-              gabung += '<td>' + data[key].customer.customer_phone + '</td>'
-              gabung += '<td>' + data[key].customer.customer_email + '</td>'
-              gabung += '</tr>'
+              var reqBodyGeocoding = {
+                "latitude": data[key].routes[0].end.latitude.toString(),
+                "longitude": data[key].routes[0].end.longitude.toString()
+              }
+              reqBodyGeocoding = JSON.stringify(reqBodyGeocoding)
+              $.ajax({
+                type: "POST",
+                url: BASE_URL + "/geocoding",
+                data: reqBodyGeocoding,
+                dataType: 'json',
+                async: false,
+                success: function (responseGeocoding) {
+                  var result = responseGeocoding.geocoding.results[0]
+                  var addressComponents = result.address_components
+                  // kelurahan
+                  // kecamatan
+                  // kode pos
+                  var kelurahan = ''
+                  var kecamatan = ''
+                  var kodePos = ''
+                  for (var keyb in addressComponents) {
+                    if (addressComponents[keyb].types.indexOf("administrative_area_level_4") >= 0) {
+                      kelurahan = addressComponents[keyb].long_name
+                    } else if (addressComponents[keyb].types.indexOf("administrative_area_level_3") >= 0) {
+                      kecamatan = addressComponents[keyb].long_name
+                    } else if (addressComponents[keyb].types.indexOf("postal_code") >= 0) {
+                      kodePos = addressComponents[keyb].long_name
+                    }
+                  }
+                  gabung += '<tr>'
+                  gabung += '<td>' + parseISOString(data[key].ordered_at) + '</td>'
+                  gabung += '<td>' + data[key].order_id + '</td>'
+                  gabung += '<td>' + data[key].customer.customer_id + '</td>'
+                  gabung += '<td>' + data[key].customer.customer_name + '</td>'
+                  gabung += '<td>' + data[key].customer.customer_phone + '</td>'
+                  gabung += '<td>' + data[key].customer.customer_email + '</td>'
+                  gabung += '<td>' + result.formatted_address + '</td>'
+                  gabung += '<td>' + kelurahan + '</td>'
+                  gabung += '<td>' + kecamatan + '</td>'
+                  gabung += '<td>' + kodePos + '</td>'
+                  gabung += '</tr>' 
+                }
+              })
             }
             $(".my-table-body").append(gabung)
             $("#my-table").DataTable()
