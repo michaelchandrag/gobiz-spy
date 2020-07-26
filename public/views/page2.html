@@ -212,20 +212,20 @@
             $(".my-table-body").empty()
             var gabung = ''
             var data = response.response_data
-            gabung += '<tr>'
-            gabung += '<td>' + parseISOString(data[key].ordered_at) + '</td>'
-            gabung += '<td>' + data[key].order_id + '</td>'
-            gabung += '<td>' + data[key].customer.customer_id + '</td>'
-            gabung += '<td>' + data[key].customer.customer_name + '</td>'
-            gabung += '<td>' + data[key].customer.customer_phone + '</td>'
-            gabung += '<td>' + data[key].customer.customer_email + '</td>'
-            gabung += '<td>' + '' + '</td>'
-            gabung += '<td>' + '' + '</td>'
-            gabung += '<td>' + '' + '</td>'
-            gabung += '<td>' + '' + '</td>'
-            gabung += '</tr>' 
-            /* for (var key in data) {
-              var reqBodyGeocoding = {
+            for (var key in data) {
+                gabung += '<tr>'
+                gabung += '<td>' + parseISOString(data[key].ordered_at) + '</td>'
+                gabung += '<td>' + data[key].order_id + '</td>'
+                gabung += '<td>' + data[key].customer.customer_id + '</td>'
+                gabung += '<td>' + data[key].customer.customer_name + '</td>'
+                gabung += '<td>' + data[key].customer.customer_phone + '</td>'
+                gabung += '<td>' + data[key].customer.customer_email + '</td>'
+                gabung += '<td>' + '' + '</td>'
+                gabung += '<td>' + '' + '</td>'
+                gabung += '<td>' + '' + '</td>'
+                gabung += '<td>' + '' + '</td>'
+                gabung += '</tr>' 
+              /* var reqBodyGeocoding = {
                 "latitude": data[key].routes[0].end.latitude.toString(),
                 "longitude": data[key].routes[0].end.longitude.toString()
               }
@@ -267,8 +267,8 @@
                   gabung += '<td>' + kodePos + '</td>'
                   gabung += '</tr>' 
                 }
-              })
-            } */
+              }) */
+            }
             $(".my-table-body").append(gabung)
             $("#my-table").DataTable()
 
